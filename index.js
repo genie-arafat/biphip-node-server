@@ -1,23 +1,22 @@
 const express = require("express");
 const app = express();
+const http = require("http").Server(app);
+const socketIO = require("socket.io")(http);
+const cors = require("cors");
+
 const PORT = 4000;
 
-//New imports
-const http = require("http").Server(app);
-const cors = require("cors");
+// CORS configuration
 const corsOptions = {
   origin: "http://localhost:3000",
-  credentials: true, //access-control-allow-credentials:true
+  credentials: true,
   optionsSuccessStatus: 200,
 };
+
+// Apply CORS middleware
 app.use(cors(corsOptions));
 
-const socketIO = require("socket.io")(http, {
-  cors: {
-    origin: "*",
-  },
-});
-
+// Socket.io connection handling
 socketIO.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
@@ -25,11 +24,9 @@ socketIO.on("connection", (socket) => {
   socket.onAny((event, ...args) => {
     // Broadcast the event to all clients except the sender
     socket.broadcast.emit(event, ...args);
-
-    // Optionally, to include the sender as well, use io.emit
-    // io.emit(event, ...args);
   });
 
+  // Handle specific socket.io events
   socket.on("peerRequest", (data) => {
     console.log(data);
     socketIO.emit("peerRequestIncoming", data);
@@ -49,12 +46,14 @@ socketIO.on("connection", (socket) => {
   });
 });
 
+// Define a simple API endpoint
 app.get("/api", (req, res) => {
   res.json({
     message: "Hello world",
   });
 });
 
+// Start the server
 http.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
