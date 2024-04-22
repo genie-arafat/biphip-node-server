@@ -5,8 +5,12 @@ const PORT = 4000;
 //New imports
 const http = require("http").Server(app);
 const cors = require("cors");
-
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, //access-control-allow-credentials:true
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 const socketIO = require("socket.io")(http, {
   cors: {
