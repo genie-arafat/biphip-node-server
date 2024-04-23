@@ -6,7 +6,7 @@ const PORT = 4000;
 const http = require("http").Server(app);
 const cors = require("cors");
 
-app.use(cors());
+// app.use(cors());
 
 const socketIO = require("socket.io")(http, {
   cors: {
