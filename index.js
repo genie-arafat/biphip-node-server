@@ -10,7 +10,10 @@ app.use(cors());
 
 const socketIO = require("socket.io")(http, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:3000", // Adjust this to the origin of your frontend application
+    methods: ["GET", "POST"], // Add the HTTP methods your client uses
+    allowedHeaders: ["my-custom-header"], // Add any custom headers your client might send
+    credentials: true,
   },
 });
 
